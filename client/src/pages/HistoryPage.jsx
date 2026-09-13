@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import ExperimentCard from "./ExperimentCard.jsx";
-import "../styles/history-page.css";
+import ExperimentCard from "../components/ExperimentCard.jsx";
 import { apiUrl } from "../api.js";
+
+import "../styles/history-page.css";
 
 export default function HistoryPage() {
   const [history, setHistory] = useState([]);
@@ -9,10 +10,10 @@ export default function HistoryPage() {
 
   useEffect(() => {
     fetch(apiUrl("/api/experiments"))
-      .then((r) => r.json())
+      .then((response) => response.json())
       .then((data) => setHistory(data.experiments || []));
   }, []);
-  
+
   return (
     <main className="shell history-page">
       <div className="page-nav">
@@ -41,11 +42,11 @@ export default function HistoryPage() {
                 <b>{open === item.id ? "−" : "+"}</b>
               </button>
               {open === item.id && (
-          <ExperimentCard
-            experiment={item.experiment}
-            status={item.status}
-            readOnly
-          />
+                <ExperimentCard
+                  experiment={item.experiment}
+                  status={item.status}
+                  readOnly
+                />
               )}
             </article>
           ))}

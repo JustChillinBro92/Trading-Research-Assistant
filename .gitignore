@@ -3,6 +3,8 @@ dist/
 .env
 client/.env
 client/.env.*
+server/.env
+server/.env.*
 !client/.env.example
 **/data/*.db
 *.log

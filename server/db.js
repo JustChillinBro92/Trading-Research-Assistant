@@ -2,7 +2,7 @@ import Database from "better-sqlite3";
 import fs from "node:fs";
 import path from "node:path";
 
-const databasePath = process.env.DATABASE_PATH;
+const databasePath = process.env.DATABASE_PATH || "data/experiments.db";
 fs.mkdirSync(path.dirname(databasePath), { recursive: true });
 const db = new Database(databasePath);
 
