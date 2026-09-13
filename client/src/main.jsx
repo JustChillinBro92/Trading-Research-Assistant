@@ -1,27 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { createRoot } from "react-dom/client";
 import QuestionForm from "./components/QuestionForm.jsx";
 import ExperimentCard from "./components/ExperimentCard.jsx";
 import ClarificationPanel from "./components/ClarificationPanel.jsx";
-import HistoryList from "./components/HistoryList.jsx";
 import EmptyState from "./components/EmptyState.jsx";
+import HistoryPage from "./components/HistoryPage.jsx";
 import "./styles/global.css";
 
 function App() {
+  if (window.location.pathname === "/history") return <HistoryPage />;
   const [question, setQuestion] = useState("");
+  const [originalQuestion, setOriginalQuestion] = useState("");
   const [experiment, setExperiment] = useState(null);
   const [missingInformation, setMissingInformation] = useState([]);
   const [status, setStatus] = useState("idle");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [history, setHistory] = useState([]);
-
-  useEffect(() => {
-    fetch("/api/experiments")
-      .then((r) => r.json())
-      .then((data) => setHistory(data.experiments || []))
-      .catch(() => {});
-  }, []);
 
   async function analyze() {
     if (!question.trim()) return;
@@ -38,11 +32,9 @@ function App() {
       if (!response.ok)
         throw new Error(data.error || "Unable to analyze question.");
       setExperiment(data.experiment);
+      setOriginalQuestion(data.question);
       setMissingInformation(data.missing_information);
       setStatus(data.status);
-      setHistory((current) =>
-        [data, ...current.filter((item) => item.id !== data.id)].slice(0, 20),
-      );
     } catch (e) {
       setError(e.message);
       setStatus("error");
@@ -64,19 +56,12 @@ function App() {
     }));
   }
 
-  function selectHistory(item) {
-    setQuestion(item.question);
-    setExperiment(item.experiment);
-    setStatus(item.status);
-    setMissingInformation([]);
-  }
-  
   return (
     <main className="shell">
       <header className="hero">
-        <div className="eyebrow">
+        <div className="top-nav"><div className="eyebrow">
           RESEARCH WORKBENCH <span>●</span> AI-ASSISTED
-        </div>
+        </div><a href="/history">View history ↗</a></div>
         <h1>
           Turn a market question
           <br />
@@ -98,7 +83,7 @@ function App() {
         <>
           <section className="question-block">
             <div className="section-label">ORIGINAL QUESTION</div>
-            <blockquote>“{question}”</blockquote>
+            <blockquote>“{originalQuestion}”</blockquote>
           </section>
           <ExperimentCard
             experiment={experiment}
@@ -115,7 +100,6 @@ function App() {
       ) : (
         status === "idle" && <EmptyState />
       )}
-      <HistoryList history={history} onSelect={selectHistory} />
     </main>
   );
 }

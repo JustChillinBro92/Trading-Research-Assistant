@@ -43,7 +43,17 @@ async function fromGemini(question) {
       responseSchema: schema,
     },
   });
-  const prompt = `Extract this trading research question into JSON. Never invent missing information; use null. Generate no advice, results, or recommendations. Question: ${question}`;
+
+  const prompt = `
+    Extract this trading research question into JSON. 
+    Never invent missing information; use null. Generate no advice, results, or recommendations.
+
+    Important field definitions:
+    - timeframe means the frequency/granularity of the market data being analyzed, such as Daily, Weekly, Hourly, or 15-minute.
+    - holding_period means how long the position remains open, such as 3 days.
+
+    Question: ${question}`;
+
   const result = await model.generateContent(prompt);
   return JSON.parse(result.response.text());
 }
