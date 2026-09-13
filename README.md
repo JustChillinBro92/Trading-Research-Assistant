@@ -85,7 +85,7 @@ The history page contains collapsible, read-only experiment cards.
 - `GET /api/health` — health check
 - `POST /api/experiments/analyze` — analyze one question without saving
 - `POST /api/experiments/batch-analyze` — analyze all questions in one uploaded document request
-- `POST /api/experiments` — explicitly save an experiment
+- `POST /api/save-experiment` — explicitly save an experiment
 - `GET /api/experiments` — list saved experiments
 
 ## Structure
@@ -123,3 +123,6 @@ npm run dev
 ```bash
 npm run build
 ```
+
+```
+
