@@ -9,6 +9,7 @@ import EmptyState from "./components/EmptyState.jsx";
 import HistoryPage from "./components/HistoryPage.jsx";
 import "./styles/global.css";
 import "./styles/batch-analyzer.css";
+import { apiUrl } from "./api.js";
 
 function App() {
   if (window.location.pathname === "/history") return <HistoryPage />;
@@ -31,7 +32,7 @@ function App() {
     setError(null);
     setStatus("loading");
     try {
-      const response = await fetch("/api/experiments/analyze", {
+      const response = await fetch(apiUrl("/api/experiments/analyze"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ question }),
@@ -65,7 +66,7 @@ function App() {
       : experiment;
 
     try {
-      const response = await fetch("/api/save-experiment", {
+      const response = await fetch(apiUrl("/api/save-experiment"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -104,7 +105,7 @@ function App() {
     try {
       const body = new FormData();
       body.append("file", batchFile);
-      const response = await fetch("/api/experiments/batch-analyze", {
+      const response = await fetch(apiUrl("/api/experiments/batch-analyze"), {
         method: "POST",
         body,
       });

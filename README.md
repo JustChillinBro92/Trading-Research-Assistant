@@ -104,6 +104,12 @@ server/data/experiments.db  Runtime database
 
 Open `http://localhost:5173`.
 
+For local development, leave `client/.env` empty so Vite proxies `/api` to the local backend. For a separately hosted frontend, set:
+
+```env
+BACKEND_API_URL=https://trading-research-assistant.onrender.com
+```
+
 Required environment variables:
 
 ```env
@@ -123,4 +129,3 @@ npm run dev
 ```bash
 npm run build
 ```
-

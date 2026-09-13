@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import ExperimentCard from "./ExperimentCard.jsx";
 import "../styles/history-page.css";
+import { apiUrl } from "../api.js";
 
 export default function HistoryPage() {
   const [history, setHistory] = useState([]);
   const [open, setOpen] = useState(null);
 
   useEffect(() => {
-    fetch("/api/experiments")
+    fetch(apiUrl("/api/experiments"))
       .then((r) => r.json())
       .then((data) => setHistory(data.experiments || []));
   }, []);

@@ -23,7 +23,6 @@ app.listen(port, "0.0.0.0", () =>
 app.get("/", (_, res) =>
   res.json({
     service: "AI Trading Research Assistant API",
-    ui: "http://localhost:5173",
     health: "/api/health",
   }),
 );
