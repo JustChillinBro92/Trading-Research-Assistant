@@ -96,7 +96,7 @@ client/src/styles/       Global and component styles
 server/services/         Gemini extraction, validation, document parsing
 server/db.js             SQLite persistence
 server/index.js          Express API
-data/experiments.db      Runtime database
+server/data/experiments.db  Runtime database
 ```
 
 ## Run locally
@@ -122,7 +122,5 @@ npm run dev
 
 ```bash
 npm run build
-```
-
 ```
 
