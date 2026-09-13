@@ -1,0 +1,49 @@
+1. Does buying NIFTY after a 1% fall have an edge?
+
+2. Does buying NIFTY after a 1% fall and holding for 3 days have an edge?
+
+3. On daily data, does buying NIFTY after a 1% fall and holding for 3 days have an edge?
+
+4. On daily NIFTY data, buy after a 1% fall and exit at the next day's close.
+
+5. Does buying NIFTY after a 1% fall work better during high-volatility periods?
+
+6. Does buying NIFTY after a 1% fall and holding for 5 days work better during high-volatility periods?
+
+7. On daily data, does buying NIFTY after a 2% drop and holding for one week outperform buying after a 1% drop?
+
+8. Does NIFTY mean reversion work better during high-volatility periods on daily data?
+
+9. On hourly data, does buying NIFTY after a 1% decline and holding for 6 hours have an edge?
+
+10. On 15-minute data, buy NIFTY after it falls 1% and exit after 4 hours.
+
+11. Does buying BANKNIFTY after a 2% fall and holding for 3 days work?
+
+12. On daily data, buy BANKNIFTY after a 2% fall and exit when it recovers to the previous close.
+
+13. Does buying NIFTY during bull markets after a 1% fall and holding for 3 days work better?
+
+14. Does buying NIFTY after a 1% fall work better when volatility is above its 20-day average, with a 5-day holding period?
+
+15. Compare buying NIFTY after a 1% fall versus a 2% fall, using daily data and a 3-day holding period.
+
+16. Does this strategy have an edge?
+
+17. Buy NIFTY and hold it for 5 days.
+
+18. On daily data, buy after a 1% fall.
+
+19. NIFTY fell yesterday. Would buying today work better in volatile markets?
+
+20. Does momentum work on NIFTY?
+
+21. Does buying NIFTY after a 1% fall and holding for 3 days work better during high volatility?
+
+22. On daily data, buy NIFTY after a 1% fall and exit when it reaches the previous close, with a maximum holding period of 5 days.
+
+23. On daily data, test NIFTY after a 1% fall.
+
+24. What happens if I buy NIFTY after it drops?
+
+25. Does buying after a big fall work?
