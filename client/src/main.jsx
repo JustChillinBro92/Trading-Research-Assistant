@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import { createRoot } from "react-dom/client";
+import AppHeader from "./components/AppHeader.jsx";
+import ModeToggle from "./components/ModeToggle.jsx";
+import BatchUploadPanel from "./components/BatchUploadPanel.jsx";
+import AnalysisResult from "./components/AnalysisResult.jsx";
 import QuestionForm from "./components/QuestionForm.jsx";
-import ExperimentCard from "./components/ExperimentCard.jsx";
-import ClarificationPanel from "./components/ClarificationPanel.jsx";
 import EmptyState from "./components/EmptyState.jsx";
 import HistoryPage from "./components/HistoryPage.jsx";
 import "./styles/global.css";
+import "./styles/batch-analyzer.css";
 
 function App() {
   if (window.location.pathname === "/history") return <HistoryPage />;
@@ -15,7 +18,12 @@ function App() {
   const [missingInformation, setMissingInformation] = useState([]);
   const [status, setStatus] = useState("idle");
   const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
+  const [batchMode, setBatchMode] = useState(false);
+  const [batchFile, setBatchFile] = useState(null);
+  const [batchResults, setBatchResults] = useState([]);
+  const [batchIndex, setBatchIndex] = useState(0);
 
   async function analyze() {
     if (!question.trim()) return;
@@ -32,6 +40,7 @@ function App() {
       if (!response.ok)
         throw new Error(data.error || "Unable to analyze question.");
       setExperiment(data.experiment);
+      setQuestion("");
       setOriginalQuestion(data.question);
       setMissingInformation(data.missing_information);
       setStatus(data.status);
@@ -43,9 +52,80 @@ function App() {
     }
   }
 
+  async function saveChanges() {
+    setSaving(true);
+    setError(null);
+
+    const savedQuestion = batchMode
+      ? batchResults[batchIndex]?.question
+      : originalQuestion;
+
+    const savedExperiment = batchMode
+      ? batchResults[batchIndex]?.experiment
+      : experiment;
+
+    try {
+      const response = await fetch("/api/save-experiment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          question: savedQuestion,
+          experiment: savedExperiment,
+        }),
+      });
+
+      const data = await response.json();
+      if (!response.ok)
+        throw new Error(data.error || "Unable to save experiment.");
+
+      if (batchMode) {
+        setBatchResults((current) =>
+          current.filter((_, index) => index !== batchIndex),
+        );
+        setBatchIndex((index) =>
+          Math.min(index, Math.max(batchResults.length - 2, 0)),
+        );
+      } else {
+        setExperiment(null);
+        setOriginalQuestion("");
+        setStatus("idle");
+      }
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function analyzeBatch() {
+    if (!batchFile) return;
+    setLoading(true);
+    setError(null);
+    try {
+      const body = new FormData();
+      body.append("file", batchFile);
+      const response = await fetch("/api/experiments/batch-analyze", {
+        method: "POST",
+        body,
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error);
+      setBatchResults(data.results || []);
+      setBatchIndex(0);
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   function updateField(field, value) {
-    setExperiment((current) => ({
-      ...current,
+    const source = batchMode
+      ? batchResults[batchIndex]?.experiment
+      : experiment;
+      
+    const next = {
+      ...source,
       [field]:
         field === "filters"
           ? value
@@ -53,54 +133,103 @@ function App() {
               .map((x) => x.trim())
               .filter(Boolean)
           : value || null,
-    }));
+    };
+
+    const missing = [];
+    if (!next.instrument)
+      missing.push({
+        field: "instrument",
+        question: "Which instrument should be tested?",
+      });
+    if (!next.timeframe)
+      missing.push({
+        field: "timeframe",
+        question: "What timeframe should be used?",
+      });
+    if (!next.entry_condition)
+      missing.push({
+        field: "entry_condition",
+        question: "What exactly triggers the entry?",
+      });
+    if (!next.exit_condition && !next.holding_period)
+      missing.push({
+        field: "holding_period",
+        question:
+          "How long should the position be held, or what defines the exit?",
+      });
+
+    const nextStatus = missing.length ? "needs_clarification" : "ready";
+    if (batchMode)
+      setBatchResults((current) =>
+        current.map((item, index) =>
+          index === batchIndex
+            ? {
+                ...item,
+                experiment: next,
+                status: nextStatus,
+                missing_information: missing,
+              }
+            : item,
+        ),
+      );
+    else {
+      setExperiment(next);
+      setMissingInformation(missing);
+      setStatus(nextStatus);
+    }
   }
+
+  const currentBatch = batchResults[batchIndex];
+  const displayedExperiment = batchMode ? currentBatch?.experiment : experiment;
+  const displayedStatus = batchMode ? currentBatch?.status : status;
 
   return (
     <main className="shell">
-      <header className="hero">
-        <div className="top-nav"><div className="eyebrow">
-          RESEARCH WORKBENCH <span>●</span> AI-ASSISTED
-        </div><a href="/history">View history ↗</a></div>
-        <h1>
-          Turn a market question
-          <br />
-          <em>into a testable experiment.</em>
-        </h1>
-        <p className="intro">
-          Describe a trading idea in plain language. The assistant structures
-          it, spots what’s missing, and gets it ready for research.
-        </p>
-      </header>
-      <QuestionForm
-        question={question}
-        setQuestion={setQuestion}
-        onAnalyze={analyze}
-        loading={loading}
+      <AppHeader />
+      <ModeToggle
+        batchMode={batchMode}
+        onToggle={() => setBatchMode((value) => !value)}
       />
+      {batchMode ? (
+        <BatchUploadPanel
+          file={batchFile}
+          loading={loading}
+          onFileChange={(e) => {
+            setBatchFile(e.target.files?.[0] || null);
+            setBatchResults([]);
+          }}
+          onAnalyze={analyzeBatch}
+        />
+      ) : (
+        <QuestionForm
+          question={question}
+          setQuestion={setQuestion}
+          onAnalyze={analyze}
+          loading={loading}
+        />
+      )}
       {error && <div className="error card">Something went wrong: {error}</div>}
-      {experiment ? (
-        <>
-          <section className="question-block">
-            <div className="section-label">ORIGINAL QUESTION</div>
-            <blockquote>“{originalQuestion}”</blockquote>
-          </section>
-          <ExperimentCard
-            experiment={experiment}
-            status={status}
-            onChange={updateField}
-          />
-          {status !== "ready" && (
-            <ClarificationPanel
-              missingInformation={missingInformation}
-              onSelect={updateField}
-            />
-          )}
-        </>
+      {displayedExperiment ? (
+        <AnalysisResult
+          experiment={displayedExperiment}
+          status={displayedStatus}
+          question={currentBatch?.question}
+          originalQuestion={originalQuestion}
+          onChange={updateField}
+          onSave={saveChanges}
+          saving={saving}
+          missingInformation={batchMode ? currentBatch?.missing_information || [] : missingInformation}
+          batchMode={batchMode}
+          batchIndex={batchMode ? batchIndex : undefined}
+          batchCount={batchMode ? batchResults.length : undefined}
+          onPrevious={() => setBatchIndex((value) => value - 1)}
+          onNext={() => setBatchIndex((value) => value + 1)}
+        />
       ) : (
         status === "idle" && <EmptyState />
       )}
     </main>
   );
 }
+
 createRoot(document.getElementById("root")).render(<App />);

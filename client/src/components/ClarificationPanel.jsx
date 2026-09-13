@@ -16,7 +16,7 @@ export default function ClarificationPanel({ missingInformation, onSelect }) {
             <strong>{item.question}</strong>
             <div className="choices">
               {item.field === "holding_period" &&
-                ["1 day", "3 days", "5 days", "Custom"].map((x) => (
+                ["1 day", "3 days", "5 days"].map((x) => (
                   <button key={x} onClick={() => onSelect("holding_period", x)}>
                     {x}
                   </button>

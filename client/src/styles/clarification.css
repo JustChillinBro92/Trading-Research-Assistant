@@ -1,1 +1,43 @@
-.clarify{margin-top:24px;padding:26px;border-left:3px solid #ffc878;background:#1d211c}.clarify h2{margin:7px 0 0;font-size:20px}.clarify p{color:#aebcb4;margin-top:5px}.missing{display:flex;gap:14px;margin-top:25px}.missing>span{color:#ffc878}.missing strong{font-size:14px}.choices{display:flex;gap:8px;margin-top:13px;flex-wrap:wrap}.choices button{font-size:12px;padding:9px 13px}.choices button:last-child{background:transparent;color:#b7c8bc;border:1px solid #4a5a50}
+.clarify {
+  margin-top: 24px;
+  padding: 26px;
+  border-left: 3px solid #ffc878;
+  background: #1d211c;
+}
+.clarify h2 {
+  margin: 7px 0 0;
+  font-size: 20px;
+}
+.clarify p {
+  color: #aebcb4;
+  margin-top: 5px;
+}
+.missing {
+  display: flex;
+  gap: 14px;
+  margin-top: 25px;
+}
+.missing > span {
+  color: #ffc878;
+}
+.missing strong {
+  font-size: 14px;
+}
+.choices {
+  display: flex;
+  gap: 8px;
+  margin-top: 13px;
+  flex-wrap: wrap;
+}
+.choices button {
+  width: 70px;
+  font-size: 12px;
+  padding: 9px 13px;
+  border: 0;
+  border-radius: 8px;
+  background: #a5e77e;
+  color: #112013;
+  font-weight: 800;
+  cursor: pointer;
+}
+

@@ -46,7 +46,8 @@ async function fromGemini(question) {
 
   const prompt = `
     Extract this trading research question into JSON. 
-    Never invent missing information; use null. Generate no advice, results, or recommendations.
+    Never invent missing information; use null. 
+    Generate no advice, results, or recommendations.
 
     Important field definitions:
     - timeframe means the frequency/granularity of the market data being analyzed, such as Daily, Weekly, Hourly, or 15-minute.
@@ -69,4 +70,58 @@ export async function analyzeQuestion(question) {
     filters: Array.isArray(experiment.filters) ? experiment.filters : [],
   };
   return { question, experiment, ...validate(experiment) };
+}
+
+export async function analyzeQuestionsBatch(text) {
+  if (!process.env.GEMINI_API_KEY)
+    throw new Error("GEMINI_API_KEY is not configured.");
+
+  const model = new GoogleGenerativeAI(
+    process.env.GEMINI_API_KEY,
+  ).getGenerativeModel({
+    model: process.env.GEMINI_MODEL,
+    generationConfig: {
+      responseMimeType: "application/json",
+      responseSchema: {
+        type: "object",
+        properties: {
+          results: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: { question: { type: "string" }, experiment: schema },
+              required: ["question", "experiment"],
+            },
+          },
+        },
+        required: ["results"],
+      },
+    },
+  });
+
+  const result = await model.generateContent(`
+    Extract every DISTINCT trading research question from this document and structure each. 
+    Return one result per question. 
+    Ignore headings, notes, answers, and non-question text. 
+    Never invent missing information; use null. 
+    Generate no advice, results, or recommendations.
+
+    Important field definitions:
+    - timeframe means the frequency/granularity of the market data being analyzed, such as Daily, Weekly, Hourly, or 15-minute.
+    - holding_period means how long the position remains open, such as 3 days.
+    - Only set timeframe when data frequency is explicitly stated.
+    
+    Document:\n${text}`,
+  );
+
+  return JSON.parse(result.response.text()).results.map((item) => {
+    const experiment = {
+      ...base(),
+      ...item.experiment,
+      filters: Array.isArray(item.experiment.filters)
+        ? item.experiment.filters
+        : [],
+    };
+    return { question: item.question, experiment, ...validate(experiment) };
+  });
 }

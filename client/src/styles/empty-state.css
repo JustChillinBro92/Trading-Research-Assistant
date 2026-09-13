@@ -1,1 +1,16 @@
-.empty-state{text-align:center;color:#829288;padding:85px 0}.spark{color:#a5e77e;font-size:28px}.empty-state h2{color:#cbd8cf;font-size:18px}.empty-state p{font-size:14px}
+.empty-state {
+  text-align: center;
+  color: #829288;
+  padding: 85px 0;
+}
+.spark {
+  color: #a5e77e;
+  font-size: 28px;
+}
+.empty-state h2 {
+  color: #cbd8cf;
+  font-size: 18px;
+}
+.empty-state p {
+  font-size: 14px;
+}

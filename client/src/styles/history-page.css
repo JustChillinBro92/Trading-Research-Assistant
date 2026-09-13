@@ -1,1 +1,64 @@
-.page-nav{margin-bottom:55px}.page-nav a{color:#a5e77e;text-decoration:none;font:12px "DM Mono"}.history-page h1{margin:20px 0 12px}.page-intro{color:#aebcb4;max-width:560px;margin-bottom:42px}.history-entries{border-top:1px solid #2c3932}.history-entry{border-bottom:1px solid #2c3932}.history-toggle{width:100%;display:flex;justify-content:space-between;align-items:center;text-align:left;background:none;border:0;color:#e8eee9;padding:22px 4px;cursor:pointer;font:15px Manrope}.history-toggle span{display:grid;gap:6px}.history-toggle small{display:block;color:#91a59a;font:10px "DM Mono";letter-spacing:.1em;margin-bottom:7px}.history-toggle b{font-size:24px;font-weight:400;color:#a5e77e}.readonly-experiment{background:#18201d;border:1px solid #2c3932;border-radius:12px;padding:24px;margin:0 0 18px}.readonly-value{color:#e8eee9;border-bottom:1px solid #37463e;padding:4px 0;font-size:14px}
+.page-nav {
+  margin-bottom: 55px;
+}
+.page-nav a {
+  color: #a5e77e;
+  text-decoration: none;
+  font: 12px "DM Mono";
+}
+.history-page h1 {
+  margin: 20px 0 12px;
+}
+.page-intro {
+  color: #aebcb4;
+  max-width: 560px;
+  margin-bottom: 42px;
+}
+.history-entries {
+  border-top: 1px solid #2c3932;
+}
+.history-entry {
+  border-bottom: 1px solid #2c3932;
+}
+.history-toggle {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-align: left;
+  background: none;
+  border: 0;
+  color: #e8eee9;
+  padding: 22px 4px;
+  cursor: pointer;
+  font: 15px Manrope;
+}
+.history-toggle span {
+  display: grid;
+  gap: 6px;
+}
+.history-toggle small {
+  display: block;
+  color: #91a59a;
+  font: 10px "DM Mono";
+  letter-spacing: 0.1em;
+  margin-bottom: 7px;
+}
+.history-toggle b {
+  font-size: 24px;
+  font-weight: 400;
+  color: #a5e77e;
+}
+.readonly-experiment {
+  background: #18201d;
+  border: 1px solid #2c3932;
+  border-radius: 12px;
+  padding: 24px;
+  margin: 0 0 18px;
+}
+.readonly-value {
+  color: #e8eee9;
+  border-bottom: 1px solid #37463e;
+  padding: 4px 0;
+  font-size: 14px;
+}

@@ -1,0 +1,1 @@
+export default function ModeToggle({ batchMode, onToggle }) { return <div className="mode-toggle"><span>Single question</span><button className={batchMode ? "active" : ""} onClick={onToggle} role="switch" aria-checked={batchMode}><i /></button><span>Batch upload</span></div>; }
